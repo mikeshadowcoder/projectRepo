@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+  <script src="https://kit.fontawesome.com/0b7906fd81.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" ></script>
 <!-- Bootstrap theme -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -76,6 +77,10 @@
     margin: 0 auto;
     text-align: center;
   }
+  .platforms{
+    margin: 0 auto;
+    text-align: center;
+  }
   </style>
   <title>Weberino</title>
     <link rel="shortcut icon" href="tf2icon.ico">
@@ -127,9 +132,34 @@
             <input type="password" name="login_password" id="login_password" class="form-control"  placeholder="Enter your password">
           </div>
           <button type="button" id="login" name="login" class="btn btn-success">Login</button>
+
+          
       </div><!-- end col -->
       
-    </div><!--  end row -->		
+    </div><!--  end row -->	
+    <div class="platforms">
+    <p class="social-text"> Or Sign in with other social platforms</p>
+                <div class="social media">
+                    <a href="#" id="facebook_btn" class="social-icon">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" id="google_btn"  class="social-icon">
+                        <i class="fab fa-google"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-microsoft"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-yahoo"></i>
+                    </a>
+                </div>
+      </div>
     </form>
   </div>
   <br>
@@ -138,3 +168,133 @@
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </body>
 </html>
+
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-analytics.js";
+  import { getAuth, 
+            createUserWithEmailAndPassword, 
+            signInWithEmailAndPassword, 
+            signOut, 
+            GoogleAuthProvider, 
+            signInWithRedirect, 
+            getRedirectResult,
+            signInWithPopup,
+            onAuthStateChanged  } 
+            from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyA5BJMCIAI6hoXY3hD3k-QW_NnuX5GV5Es",
+  authDomain: "firstproject-68c11.firebaseapp.com",
+  projectId: "firstproject-68c11",
+  storageBucket: "firstproject-68c11.appspot.com",
+  messagingSenderId: "649357505390",
+  appId: "1:649357505390:web:7e4f5d2e10c35603c0877f",
+  measurementId: "G-FH35KRD446"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const auth = getAuth();
+const provider = new GoogleAuthProvider();
+
+console.log(app)
+
+const googlBtn = document.getElementById("google_btn");
+
+googlBtn.addEventListener("click", () => {
+  signInWithPopup(auth, provider)
+  .then((result) => {
+    // This gives you a Google Access Token. You can use it to access the Google API.
+    const credential = GoogleAuthProvider.credentialFromResult(result);
+    const token = credential.accessToken;
+    // The signed-in user info.
+    const user = result.user;
+    // IdP data available using getAdditionalUserInfo(result)
+    (Swal.fire({
+        icon: 'success',
+        title: 'Registered Successfully',
+        text: 'You Can Now Login',
+        }));
+  }).catch((error) => {
+    // Handle Errors here.
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // The email of the user's account used.
+    const email = error.customData.email;
+    // The AuthCredential type that was used.
+    const credential = GoogleAuthProvider.credentialFromError(error);
+    // ...
+  });
+})
+
+
+//----- New Registration code start	  
+document.getElementById("register").addEventListener("click", function() {
+  var email =  document.getElementById("email").value;
+  var password = document.getElementById("password").value;
+  
+  //For new registration
+  createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
+    // Signed in 
+    const user = userCredential.user;
+    console.log(user);
+    (Swal.fire({
+        icon: 'success',
+        title: 'Registered Successfully',
+        text: 'You Can Now Login',
+        }));
+    // ...
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // ..
+    console.log(errorMessage);
+    alert(error);
+  });		  		  
+});
+//----- End
+
+//----- Login code start	  
+document.getElementById("login").addEventListener("click", function() {
+  var email =  document.getElementById("login_email").value;
+  var password = document.getElementById("login_password").value;
+
+  signInWithEmailAndPassword(auth, email, password).then((userCredential) => {
+    // Signed in 
+    const user = userCredential.user;
+    console.log(user);
+    alert(user.email+" Login successfully!!!");
+    document.getElementById('logout').style.display = 'block';
+    // ...
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    console.log(errorMessage);
+    alert(errorMessage);
+  });		  		  
+});
+//----- End
+
+//----- Logout code start	  
+document.getElementById("logout").addEventListener("click", function() {
+  signOut(auth).then(() => {
+    // Sign-out successful.
+    console.log('Sign-out successful.');
+    alert('Sign-out successful.');
+    document.getElementById('logout').style.display = 'none';
+  }).catch((error) => {
+    // An error happened.
+    console.log('An error happened.');
+  });		  		  
+});
+//----- End
+</script>
