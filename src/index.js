@@ -25,7 +25,7 @@ const analytics = getAnalytics(app);
 console.log(app)
 const db = getFirestore(app);
 
-const saveBtn = document.querySelector(".crud_saveBtn")
+const saveBtn = document.querySelector("#crud_saveBtn");
 saveBtn.addEventListener("click", async () => {
   const collectionRef = collection(db, "player_info")
   const newInfo = await addDoc(collectionRef, {
