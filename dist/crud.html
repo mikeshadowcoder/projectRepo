@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dynamic Table with Edit and Delete Buttons (Modal)</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src='./bundle.js'></script>
+</head>
+<body>
+    <div class="container">
+        <h2>Dynamic Table with Edit and Delete Buttons (Modal)</h2>
+        <button class="btn btn-primary" data-toggle="modal" data-target="#addModal">Add Row</button>
+        <button class="btn btn-emergency crud_saveBtn" id="crud_saveBtn">Make Gadget</button>
+        <table class="table mt-4">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+                <!-- Table rows will be dynamically added here -->
+            </tbody>
+        </table>
+
+        <!-- Add Modal -->
+        <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addModalLabel">Add Row</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="add-name">Name:</label>
+                            <input type="text" class="form-control" id="add-name">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="addRow()">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Modal -->
+        <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel">Edit Row</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="edit-name">Name:</label>
+                            <input type="text" class="form-control" id="edit-name">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="saveRow()">Save Changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript code -->
+    <script>
+        var rowId = 1;
+        var editRowId = null;
+
+        function addRow() {
+            var nameInput = document.getElementById("add-name");
+            var name = nameInput.value;
+
+            if (name.trim() !== "") {
+                var tableBody = document.getElementById("table-body");
+
+                var newRow = document.createElement("tr");
+                newRow.setAttribute("id", "row-" + rowId);
+
+                var idCell = document.createElement("td");
+                idCell.innerHTML = rowId;
+                newRow.appendChild(idCell);
+
+                var nameCell = document.createElement("td");
+                nameCell.innerHTML = name;
+                newRow.appendChild(nameCell);
+
+                var actionCell = document.createElement("td");
+                actionCell.innerHTML = "<button class='btn btn-sm btn-primary' onclick='showEditModal(" + rowId + ")'>Edit</button> " +
+                                       "<button class='btn btn-sm btn-danger' onclick='deleteRow(" + rowId + ")'>Delete</button>";
+                newRow.appendChild(actionCell);
+
+                tableBody.appendChild(newRow);
+
+                nameInput.value = "";
+                rowId++;
+
+                $('#addModal').modal('hide');
+            }
+        }
+
+        function showEditModal(id) {
+            var nameCell = document.getElementById("row-" + id).getElementsByTagName("td")[1];
+            var nameInput = document.getElementById("edit-name");
+
+            nameInput.value = nameCell.innerHTML;
+            editRowId = id;
+
+            $('#editModal').modal('show');
+        }
+
+        function saveRow() {
+            var nameInput = document.getElementById("edit-name");
+            var newName = nameInput.value;
+
+            if (newName.trim() !== "") {
+                var nameCell = document.getElementById("row-" + editRowId).getElementsByTagName("td")[1];
+                nameCell.innerHTML = newName;
+
+                nameInput.value = "";
+                editRowId = null;
+
+                $('#editModal').modal('hide');
+            }
+        }
+
+        function deleteRow(id) {
+            var row = document.getElementById("row-" + id);
+            row.parentNode.removeChild(row);
+        }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>
+

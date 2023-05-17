@@ -1,8 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getFirestore } from "firebase/firestore";
-import { collection, addDoc } from "firebase/firestore"; 
+import { getFirestore, collection, addDoc } from "firebase/firestore";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -25,13 +24,4 @@ const analytics = getAnalytics(app);
 console.log(app)
 const db = getFirestore(app);
 
-const saveBtn = document.querySelector(".crud_saveBtn");
-saveBtn.addEventListener("click", async () => {
-  const collectionRef = collection(db, "player_info")
-  const newInfo = await addDoc(collectionRef, {
-    player_name: "sassybaka2020",
-    hours_played: "108.4",
-    version: "11"
-  });
-  console.log(`Added new player info: ${newInfo.id}`)
-})
+
