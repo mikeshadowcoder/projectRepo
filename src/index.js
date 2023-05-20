@@ -25,12 +25,4 @@ console.log(app)
 const db = getFirestore(app);
 const collectionRef = collection(db, "player_info");
 
-async function writePlayerInfo() {
-  const newDoc = await addDoc(collectionRef, {
-    player_name: "sassybaka2020",
-    hours_played: "108.4",
-    main_class: "Heavy"
-  });
-console.log(`Your doc was created at ${newDoc.path}`);
-console.log("Document written with ID:", newInfo.id);
-}
+
